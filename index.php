@@ -11,7 +11,7 @@
     <title>Eidgenössische Abstimmungen 1866 - 2017</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="css/scrolling-nav.css" rel="stylesheet">
@@ -52,13 +52,32 @@
         <div class="row">
           <div class="col-lg-8 mx-auto">
             <h2>Kriterien</h2>
-            <p class="lead">This is a great place to talk about your webpage. This template is purposefully unstyled so you can use it as a boilerplate or starting point for you own landing page designs! This template features:</p>
-            <ul>
-              <li>Clickable nav links that smooth scroll to page sections</li>
-              <li>Responsive behavior when clicking nav links perfect for a one page website</li>
-              <li>Bootstrap's scrollspy feature which highlights which section of the page you're on in the navbar</li>
-              <li>Minimal custom CSS so you are free to explore your own unique design options</li>
-            </ul>
+            <p class="lead"></p>
+
+              <button type="button" class="btn" onclick="hideElements('jahr')">Jahr</button>
+              <div id="jahr">
+
+              </div>
+
+              <button type="button" class="btn" onclick="hideElements('stimmbeteiligung')">Stimmbeteiligung</button>
+              <div id="stimmbeteiligung">
+
+              </div>
+
+              <button type="button" class="btn" onclick="hideElements('anteil')">Ja-/Nein Anteil</button>
+              <div id="anteil">
+
+              </div>
+
+              <button type="button" class="btn" onclick="hideElements('suchbegriffe')">Suchbegriffe</button>
+              <div id="suchbegriffe">
+
+              </div>
+
+              <button type="button" class="btn" onclick="hideElements('abstimmungsart')">Abstimmungsart</button>
+              <div id="abstimmungsart">
+
+              </div>
           </div>
         </div>
       </div>
@@ -68,8 +87,9 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto">
-            <h2>Services we offer</h2>
-            <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut optio velit inventore, expedita quo laboriosam possimus ea consequatur vitae, doloribus consequuntur ex. Nemo assumenda laborum vel, labore ut velit dignissimos.</p>
+            <h2>Auswertung</h2>
+
+              // TO DO
           </div>
         </div>
       </div>
@@ -86,12 +106,16 @@
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap-slider.js"></script>
 
     <!-- Plugin JavaScript -->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom JavaScript for this theme -->
     <script src="js/scrolling-nav.js"></script>
+
+    <!-- own JavaScript -->
+    <script src="js/functions.js"></script>
 
   </body>
 
