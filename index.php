@@ -161,7 +161,13 @@
                   <h4>Abstimmungsart</h4>
                   <p class="lead">Hier können Sie zwischen einer der Abstimmungsarten aussuchen.</p>
 
-                  
+                  <select id="abstimmung" class="custom-select">
+                  <option selected value="standard">Wählen Sie aus...</option>
+                  <option value="volksinitiative">Volksinitiative</option>
+                  <option value="obligatorisches_referendum">Obligatorisches Referendum</option>
+                  <option value="fakultatives_referendum">Fakultatives Referendum</option>
+                  <option value="plebizit">Plebizit</option>
+                  </select>
 
               </div>
           </div>
@@ -202,5 +208,4 @@
 
     <!-- own JavaScript -->
     <script src="js/functions.js"></script></body>
-
 </html>
