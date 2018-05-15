@@ -1,12 +1,10 @@
 // hide elements when pressing button
-function hideElements(div) {
-    var x = document.getElementById(div);
-    if (x.style.display === "none") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "none";
-    }
+function showDiv(id) {
+    var e = document.getElementById(id);
+    if(e.style.display == 'block')
+        e.style.display = 'none';
+    else
+        e.style.display = 'block';
 }
 
-// Without JQuery
-var slider = new Slider('#ex2', {});
+

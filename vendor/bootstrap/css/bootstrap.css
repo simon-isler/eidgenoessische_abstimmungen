@@ -4742,7 +4742,7 @@ input[type="button"].btn-block {
 }
 
 .btn .badge {
-  position: relative;
+  position: absolute;
   top: -1px;
 }
 

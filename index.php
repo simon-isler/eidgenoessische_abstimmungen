@@ -16,10 +16,11 @@
     <!-- Custom styles for this template -->
     <link href="css/scrolling-nav.css" rel="stylesheet">
 
+      <!-- JSR -->
+      <link rel="stylesheet" href="jsr/assets/css/main.css">
   </head>
 
   <body id="page-top">
-
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
       <div class="container">
@@ -42,6 +43,7 @@
 
     <header class="bg-primary text-white">
       <div class="container text-center">
+          <img src="img/wappen_thurgau.png" width="10%" height="20%" style="float: left;">
         <h1>Eidgenössische Abstimmungen 1866 - 2017</h1>
         <p class="lead">Thurgau</p>
       </div>
@@ -51,31 +53,115 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto">
-            <h2>Kriterien</h2>
-            <p class="lead"></p>
+            <h1 >Kriterien</h1>
+            <p class="lead">Nehmen Sie sich Zeit, Ihre Kriterien zusammenzustellen und das Programm sucht Ihnen Ihre passenden Abstimmungen hinaus.</p>
+              <!-- buttons -->
+              <input type="button" class="btn" onclick="showDiv('jahr')" value="Jahr">
+              <button type="button" class="btn" onclick="showDiv('stimmbeteiligung')">Stimmbeteiligung</button>
+              <button type="button" class="btn" onclick="showDiv('anteil')">Ja-Anteil</button>
+              <button type="button" class="btn" onclick="showDiv('suchbegriffe')">Suchbegriffe</button>
+              <button type="button" class="btn" onclick="showDiv('abstimmungsart')">Abstimmungsart</button>
 
-              <button type="button" class="btn" onclick="hideElements('jahr')">Jahr</button>
-              <div id="jahr">
-
+              <script src="jsr/main.js"></script>
+              <script src="jsr/index.js"></script>
+              <!-- divs for btns -->
+              <div id="jahr" style="display:none;">
+                  <br>
+                  <h4>Jahr</h4>
+                  <p class="lead">Hier können Sie einstellen, in welchem Jahr die Abstimmung war.</p>
+                  <input id="range-2-1" type="range" min="0" max="100" value="30">
+                  <input id="range-2-2" type="range" min="0" max="100" value="30">
+                  <script>
+                      new JSR(['#range-2-1', '#range-2-2'], {
+                          sliders: 2,
+                          min: 1866,
+                          max: 2017,
+                          values: [1900, 1990],
+                          labels: {
+                              formatter: (value) => {
+                                  return value.toString();
+                              }
+                          },
+                          limit: {
+                              show: true
+                          },
+                          grid: {
+                              color: '#999'
+                          }
+                      });
+                  </script>
               </div>
 
-              <button type="button" class="btn" onclick="hideElements('stimmbeteiligung')">Stimmbeteiligung</button>
-              <div id="stimmbeteiligung">
+              <div id="stimmbeteiligung" style="display:none;">
+                  <br>
+                  <h4>Stimmbeteiligung</h4>
+                  <p class="lead">Hier können Sie einstellen, in welchem Bereich die Stimmbeteiligung war.</p>
+                  <input id="range-2-3" type="range" min="0" max="100" value="30">
+                  <input id="range-2-4" type="range" min="0" max="100" value="30">
 
+                  <script>
+                      new JSR(['#range-2-3', '#range-2-4'], {
+                          sliders: 2,
+                          min: 0,
+                          max: 100,
+                          values: [20, 40],
+                          labels: {
+                              formatter: (value) => {
+                                  return value.toString() + "%";
+                              }
+                          },
+                          limit: {
+                              show: true
+                          },
+                          grid: {
+                              color: '#999'
+                          }
+                      });
+                  </script>
               </div>
 
-              <button type="button" class="btn" onclick="hideElements('anteil')">Ja-/Nein Anteil</button>
-              <div id="anteil">
+              <div id="anteil" style="display:none;">
+                  <br>
+                  <h4>Ja-Anteil</h4>
+                  <p class="lead">Hier können Sie einstellen, in welchem Bereich der Ja-Anteil war.</p>
+                  <input id="range-2-5" type="range" min="0" max="100" value="30">
+                  <input id="range-2-6" type="range" min="0" max="100" value="30">
 
+                  <script>
+                      new JSR(['#range-2-5', '#range-2-6'], {
+                          sliders: 2,
+                          min: 0,
+                          max: 100,
+                          values: [20, 40],
+                          labels: {
+                              formatter: (value) => {
+                                  return value.toString() + "%";
+                              }
+                          },
+                          limit: {
+                              show: true
+                          },
+                          grid: {
+                              color: '#999'
+                          }
+                      });
+                  </script>
               </div>
 
-              <button type="button" class="btn" onclick="hideElements('suchbegriffe')">Suchbegriffe</button>
-              <div id="suchbegriffe">
-
+              <div id="suchbegriffe" style="display:none;">
+                  <br>
+                  <h4>Suchbegriffe</h4>
+                  <p class="lead">Hier können Sie nach einem Stichwort suchen.</p>
+                  <input type="text" class="form-control" id="suchbegriff" placeholder="Suche...">
+                  <br>
               </div>
 
-              <button type="button" class="btn" onclick="hideElements('abstimmungsart')">Abstimmungsart</button>
-              <div id="abstimmungsart">
+              <div id="abstimmungsart" style="display:none;">
+                  <br>
+                  <h4>Abstimmungsart</h4>
+                  <p class="lead">Hier können Sie zwischen einer der Abstimmungsarten aussuchen.</p>
+
+                  
 
               </div>
           </div>
@@ -87,7 +173,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto">
-            <h2>Auswertung</h2>
+            <h1>Auswertung</h1>
 
               // TO DO
           </div>
@@ -115,8 +201,6 @@
     <script src="js/scrolling-nav.js"></script>
 
     <!-- own JavaScript -->
-    <script src="js/functions.js"></script>
-
-  </body>
+    <script src="js/functions.js"></script></body>
 
 </html>
