@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-
+    <!-- encoding -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -20,8 +20,8 @@
     <link rel="stylesheet" href="jsr/assets/css/main.css">
 </head>
 
-<body id="page-top">
 <!-- Navigation -->
+<body id="page-top">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
     <div class="container">
         <a class="navbar-brand js-scroll-trigger" href="#page-top">Eidgenössische Abstimmungen</a>
@@ -42,6 +42,7 @@
     </div>
 </nav>
 
+<!-- title -->
 <header class="bg-primary text-white">
     <div class="container text-center">
         <img src="img/wappen_thurgau.png" width="10%" height="20%" style="float: left;">
@@ -56,8 +57,7 @@
         <div class="row">
             <div class="col-lg-8 mx-auto">
                     <h1>Kriterien</h1>
-                    <p class="lead">Nehmen Sie sich Zeit, Ihre Kriterien zusammenzustellen und das Programm sucht Ihnen
-                        Ihre passenden Abstimmungen hinaus.</p>
+                    <p class="lead">Nehmen Sie sich Zeit, Ihre Kriterien zusammenzustellen und das Programm sucht Ihnen Ihre passenden Abstimmungen hinaus.</p>
 
                     <!-- buttons -->
                     <input type="button" class="btn" onclick="showDiv('jahr')" value="Jahr">
@@ -217,6 +217,7 @@
                         $stimmbeteiligung = $array_abstg[$i][11];
                         $prozentJa = $array_abstg[$i][12];
 
+                        // display
                         echo "
                         <div class=\"panel-group\">
                           <div class=\"panel panel-default\">
@@ -233,9 +234,13 @@
                               Enthaltungen: $anzEnthaltungen <br>
                               Gültige Stimmen: $gueltigeStimmen <br>
                               <br>
-                              Ja-Stimmen: $jaStimmen, $prozentJa <br>
+                              Ja-Stimmen: $jaStimmen, $prozentJa% <br>
                               Nein-Stimmen: $neinStimmen <br>
                               Stimmbeteiligung: $stimmbeteiligung
+                              
+                              <div class=\"col-md-5\">
+                                <canvas id=\"piechart\" ></canvas>
+                              </div>
                               </div>
                             </div>
                           </div>
