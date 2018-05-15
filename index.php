@@ -49,12 +49,14 @@
       </div>
     </header>
 
+    <!-- Kriterien -->
     <section id="kriterien">
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto">
             <h1 >Kriterien</h1>
             <p class="lead">Nehmen Sie sich Zeit, Ihre Kriterien zusammenzustellen und das Programm sucht Ihnen Ihre passenden Abstimmungen hinaus.</p>
+
               <!-- buttons -->
               <input type="button" class="btn" onclick="showDiv('jahr')" value="Jahr">
               <button type="button" class="btn" onclick="showDiv('stimmbeteiligung')">Stimmbeteiligung</button>
@@ -69,8 +71,10 @@
                   <br>
                   <h4>Jahr</h4>
                   <p class="lead">Hier können Sie einstellen, in welchem Jahr die Abstimmung war.</p>
-                  <input id="range-2-1" type="range" min="0" max="100" value="30">
-                  <input id="range-2-2" type="range" min="0" max="100" value="30">
+                  <form action="" method="post">
+                  <input name="jahrSlider_1" id="range-2-1" type="range" min="0" max="100" value="30">
+                  <input name="jahrSlider_2" id="range-2-2" type="range" min="0" max="100" value="30">
+                  </form>
                   <script>
                       new JSR(['#range-2-1', '#range-2-2'], {
                           sliders: 2,
@@ -160,28 +164,60 @@
                   <br>
                   <h4>Abstimmungsart</h4>
                   <p class="lead">Hier können Sie zwischen einer der Abstimmungsarten aussuchen.</p>
-
                   <select id="abstimmung" class="custom-select">
                   <option selected value="standard">Wählen Sie aus...</option>
                   <option value="volksinitiative">Volksinitiative</option>
+                  <option value="volks_gw_gegenwurf">Volksinitiative mit Gegenwurf: Gegenwurf</option>
+                  <option value="volks_gw_initiative">Voksinitiative mit Gegenwurf: Initiative</option>
                   <option value="obligatorisches_referendum">Obligatorisches Referendum</option>
                   <option value="fakultatives_referendum">Fakultatives Referendum</option>
                   <option value="plebizit">Plebizit</option>
                   </select>
-
               </div>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Auswertung -->
     <section id="auswertung" class="bg-light">
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto">
             <h1>Auswertung</h1>
+              <p class="lead">Folgende Abstimmungen treffen auf Ihre Kriterien zu: </p>
 
-              // TO DO
+              <?php
+              // read CSV file
+                function readCSV($csvFile) {
+                    $file_handle = fopen($csvFile, 'r');
+                    while (!feof($file_handle)) {
+                        $line_of_text[] = fgetcsv($file_handle, 1024, ";");
+                    }
+                    fclose($file_handle);
+                    return $line_of_text;
+                }
+
+                // execute function
+                $abstimmungen = 'data/abstimmungen.csv'; // file name
+                $array_abstg = readCSV($abstimmungen);
+                $array_length = count($array_abstg); // array length
+
+                for ($i = 1; $i < $array_length-1; $i++) {
+                    // save array elements
+                    $datum = $array_abstg[$i][0];
+                    $name = $array_abstg[$i][1];
+                    $art = $array_abstg[$i][3];
+                    $anzStimmberechtigte = $array_abstg[$i][4];
+                    $anzStimmzettel = $array_abstg[$i][5];
+                    $anzEnthaltungen = $array_abstg[$i][6];
+                    $gueltigeStimmen = $array_abstg[$i][8];
+                    $jaStimmen = $array_abstg[$i][9];
+                    $neinStimmen = $array_abstg[$i][10];
+                    $stimmbeteiligung = $array_abstg[$i][11];
+                    $prozentJa = $array_abstg[$i][12];
+                }
+              ?>
           </div>
         </div>
       </div>
