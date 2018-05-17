@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    <!-- encoding -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -20,7 +19,6 @@
     <link rel="stylesheet" href="jsr/assets/css/main.css">
 </head>
 
-<!-- Navigation -->
 <body id="page-top">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
     <div class="container">
@@ -42,7 +40,6 @@
     </div>
 </nav>
 
-<!-- title -->
 <header class="bg-primary text-white">
     <div class="container text-center">
         <img src="img/wappen_thurgau.png" width="10%" height="20%" style="float: left;">
@@ -51,15 +48,14 @@
     </div>
 </header>
 
-<!-- Kriterien -->
 <section id="kriterien">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 mx-auto">
+                <form action="index.php" method="post">
                     <h1>Kriterien</h1>
                     <p class="lead">Nehmen Sie sich Zeit, Ihre Kriterien zusammenzustellen und das Programm sucht Ihnen Ihre passenden Abstimmungen hinaus.</p>
 
-                    <!-- buttons -->
                     <input type="button" class="btn" onclick="showDiv('jahr')" value="Jahr">
                     <button type="button" class="btn" onclick="showDiv('stimmbeteiligung')">Stimmbeteiligung</button>
                     <button type="button" class="btn" onclick="showDiv('anteil')">Ja-Anteil</button>
@@ -68,19 +64,18 @@
 
                     <script src="jsr/main.js"></script>
                     <script src="jsr/index.js"></script>
-                    <!-- divs for btns -->
                     <div id="jahr" style="display:none;">
                         <br>
                         <h4>Jahr</h4>
                         <p class="lead">Hier können Sie einstellen, in welchem Jahr die Abstimmung war.</p>
-                            <input name="jahrSlider_1" id="range-2-1" type="range" min="0" max="100" value="30">
-                            <input name="jahrSlider_2" id="range-2-2" type="range" min="0" max="100" value="30">
+                            <input name="jahrSlider_1" id="range-2-1" type="range" min="1866" max="2017">
+                            <input name="jahrSlider_2" id="range-2-2" type="range" min="1866" max="2017">
                         <script>
                             new JSR(['#range-2-1', '#range-2-2'], {
                                 sliders: 2,
                                 min: 1866,
                                 max: 2017,
-                                values: [1900, 1990],
+                                values: [1866, 2017],
                                 labels: {
                                     formatter: (value) => {
                                         return value.toString();
@@ -100,15 +95,15 @@
                         <br>
                         <h4>Stimmbeteiligung</h4>
                         <p class="lead">Hier können Sie einstellen, in welchem Bereich die Stimmbeteiligung war.</p>
-                        <input id="range-2-3" type="range" min="0" max="100" value="<?php $slider1 ?>">
-                        <input id="range-2-4" type="range" min="0" max="100" value="30">
+                        <input name="stimmbeteiligung_1" id="range-2-3" type="range" min="0" max="100">
+                        <input name="stimmbeteiligung_2" id="range-2-4" type="range" min="0" max="100">
 
                         <script>
                             new JSR(['#range-2-3', '#range-2-4'], {
                                 sliders: 2,
                                 min: 0,
                                 max: 100,
-                                values: [20, 40],
+                                values: [0, 100],
                                 labels: {
                                     formatter: (value) => {
                                         return value.toString() + "%";
@@ -128,14 +123,14 @@
                         <br>
                         <h4>Ja-Anteil</h4>
                         <p class="lead">Hier können Sie einstellen, in welchem Bereich der Ja-Anteil war.</p>
-                        <input id="range-2-5" type="range" min="0" max="100" value="30">
-                        <input id="range-2-6" type="range" min="0" max="100" value="30">
+                        <input name="jaAnteil_1" id="range-2-5" type="range" min="0" max="100" value="30">
+                        <input name="jaAnteil_2" id="range-2-6" type="range" min="0" max="100" value="30">
                         <script>
                             new JSR(['#range-2-5', '#range-2-6'], {
                                 sliders: 2,
                                 min: 0,
                                 max: 100,
-                                values: [20, 40],
+                                values: [0, 100],
                                 labels: {
                                     formatter: (value) => {
                                         return value.toString() + "%";
@@ -163,30 +158,37 @@
                         <br>
                         <h4>Abstimmungsart</h4>
                         <p class="lead">Hier können Sie zwischen einer der Abstimmungsarten aussuchen.</p>
-                        <select id="abstimmung" class="custom-select">
-                            <option selected value="standard">Wählen Sie aus...</option>
-                            <option value="volksinitiative">Volksinitiative</option>
-                            <option value="volks_gw_gegenwurf">Volksinitiative mit Gegenwurf: Gegenwurf</option>
-                            <option value="volks_gw_initiative">Voksinitiative mit Gegenwurf: Initiative</option>
-                            <option value="obligatorisches_referendum">Obligatorisches Referendum</option>
-                            <option value="fakultatives_referendum">Fakultatives Referendum</option>
-                            <option value="plebizit">Plebizit</option>
+                        <select name="abstimmungArt" id="abstimmung" class="custom-select">
+                            <option selected value="alle">Alle</option>
+                            <option value="Volksinitiative">Volksinitiative</option>
+                            <option value="Volksinitiative mit Gegenentwurf: Gegenentwurf">Volksinitiative mit Gegenentwurf: Gegenentwurf</option>
+                            <option value="Volksinitiative mit Gegenentwurf: Initiative">Volksinitiative mit Gegenentwurf: Initiative</option>
+                            <option value="Obligatorisches Referendum">Obligatorisches Referendum</option>
+                            <option value="Fakultatives Referendum">Fakultatives Referendum</option>
+                            <option value="Plebiszit">Plebiszit</option>
                         </select>
                     </div>
+                    <input class="btn btn-primary" type="submit" name="submit" value="Submit" style="margin-top: 5%; margin-left: 80%;">
+                </form>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Auswertung -->
+<?php
+// variable for auswertung display
+$notSet = false;
+?>
+
 <section id="auswertung" class="bg-light">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 mx-auto">
                 <h1>Auswertung</h1>
-                <p class="lead">Folgende Abstimmungen treffen auf Ihre Kriterien zu: </p>
-
                     <?php
+                    // hide errors
+                    error_reporting(0);
+
                     // read CSV file
                     function readCSV($csvFile)
                     {
@@ -198,14 +200,51 @@
                         return $line_of_text;
                     }
 
+
                     // execute function
                     $abstimmungen = 'data/abstimmungen.csv'; // file name
                     $array_abstg = readCSV($abstimmungen);
                     $array_length = count($array_abstg); // array length
 
-                    for ($i = 1; $i < $array_length - 1; $i++) {
+                    // save values from criterias upon submit
+                    if (isset($_POST['submit'])) {
+                        // Jahr
+                        $gesJahr_1 = $_POST['jahrSlider_1']; // anfang
+                        $gesJahr_2 = $_POST['jahrSlider_2']; // ende
+
+                        // Stimmbeteiligung
+                        $stimmbeteiligung_1 = $_POST['stimmbeteiligung_1'];
+                        $stimmbeteiligung_2 = $_POST['stimmbeteiligung_2'];
+
+                        // Ja-Anteil
+                        $jaAnteil_1 = $_POST['jaAnteil_1'];
+                        $jaAnteil_2 = $_POST['jaAnteil_2'];
+
+                        // Suchbegriff
+                        if (isset($_POST['suche'])) {
+                            $suchbegriff_1 = $_POST['suche'];
+                            $GLOBALS['notSet'] = false;
+                        } else {
+                            $suchbegriff_1 = "";
+                        }
+
+                        // Abstimmungsart
+                        $abstimmungsart_1 = $_POST['abstimmungArt'];
+                    } else {
+                         $GLOBALS['notSet'] = true;
+                    }
+
+                    if (($GLOBALS['notSet']) == false) {
+                        echo "<p class='lead'>Folgende Auswahl trifft auf Ihre Kriterien zu.</p>";
+                    }
+
+                    // amount of matching datasets
+                    $anzahl = 0;
+
+                    for ($i = 1; $i < $array_length -1; $i++) {
                         // save array elements
                         $datum = $array_abstg[$i][0];
+                        $jahr = substr($datum, -4);
                         $name = utf8_encode($array_abstg[$i][1]); // umlaute
                         $art = $array_abstg[$i][3];
                         $anzStimmberechtigte = $array_abstg[$i][4];
@@ -216,9 +255,22 @@
                         $neinStimmen = $array_abstg[$i][10];
                         $stimmbeteiligung = $array_abstg[$i][11];
                         $prozentJa = $array_abstg[$i][12];
+                        $prozentNein = $prozentJa / $jaStimmen * $neinStimmen;
+                        $prozentNein = round($prozentNein, 1);
+
+                        // leere Stimmbteteiligung
+                        if ($stimmbeteiligung == "") {
+                            $stimmbeteiligung = 0;
+                            $stimm = "Keine Daten vorhanden.";
+                        } else {
+                            $stimm = $stimmbeteiligung;
+                        }
 
                         // display
-                        echo "
+                        if (($jahr >= $gesJahr_1 && $jahr <= $gesJahr_2) && ($stimmbeteiligung >= $stimmbeteiligung_1 && $stimmbeteiligung <= $stimmbeteiligung_2) && ($prozentJa >= $jaAnteil_1 && $prozentJa <= $jaAnteil_2) && ($art == $abstimmungsart_1 || $abstimmungsart_1 == 'alle')) {
+                            if ((strpos($name, $suchbegriff_1)) || $suchbegriff_1 == "") {
+                                $anzahl++;
+                                echo "
                         <div class=\"panel-group\">
                           <div class=\"panel panel-default\">
                             <div class=\"panel-heading\">
@@ -228,27 +280,65 @@
                             </div>
                             <div id=\"$i\" class=\"panel-collapse collapse\">
                               <div class=\"panel-body\">
-                              Art: $art <br>
-                              Stimmberechtigte: $anzStimmberechtigte <br>
-                              Stimmzettel: $anzStimmzettel <br>
-                              Enthaltungen: $anzEnthaltungen <br>
-                              Gültige Stimmen: $gueltigeStimmen <br>
-                              <br>
-                              Ja-Stimmen: $jaStimmen, $prozentJa% <br>
-                              Nein-Stimmen: $neinStimmen <br>
-                              Stimmbeteiligung: $stimmbeteiligung
-                              
-                              <div class=\"col-md-5\">
-                                <canvas id=\"piechart\" ></canvas>
-                              </div>
-                              </div>
-                            </div>
+                              <table class=\"table-borderless\">                            
+                                  <thead>
+                                    <tr>
+                                      <th scope=\"col\" style='width: 45%;'>Name</th>
+                                      <th scope=\"col\" style='width: 20%;'>Datum</th>
+                                      <th scope=\"col\" style='width: 35%;'>Art</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>                                  
+                                      <td>$name</td>
+                                      <td>$datum</td>
+                                      <td>$art</td>
+                                    </tr>                                
+                                  </tbody>                       
+                                  <thead>
+                                    <tr>
+                                      <th scope=\"col\" style='width: 45%; padding-top: 4%;'>Stimmbeteiligung [%]</th>
+                                      <th scope=\"col\" style='width: 20%; padding-top: 4%;'>Ja</th>
+                                      <th scope=\"col\" style='width: 35%; padding-top: 4%;'>Nein</th>
+                                    </tr>   
+                                    </thead>
+                                    <tbody>
+                                    <tr>                                  
+                                      <td>$stimm</td>
+                                      <td>$jaStimmen ($prozentJa%)</td>
+                                      <td>$neinStimmen ($prozentNein%)</td>
+                                    </tr>                        
+                                  </tbody>                                                          
+                               </table>     
+                               </div>    
                           </div>
+                        </div>
                         </div>
                         <br>
                         ";
+                                }
+                            }
                     }
                     ?>
+
+                    <p class="lead">
+                        <?php
+                        if ($GLOBALS['notSet'] == true) {
+                            echo "Es wurden noch keine Kriterien ausgewählt. Bitte wählen Sie diese oben aus und drücken Sie auf 'Submit'.";
+                        }
+                        ?>
+                    </p>
+
+                <?php
+                // if anzahl == 1, then singular of abstimmung
+                $text = "";
+                if ($GLOBALS['anzahl'] == 1) {
+                $text = $text . "Abstimmung";
+                } else {
+                $text = $text . "Abstimmungen";
+                }
+                echo "<br><p class='lead'>Insgesamt hat es <strong>$anzahl</strong> zutreffende $text.</p>";
+                ?>
             </div>
         </div>
     </div>
@@ -265,10 +355,10 @@
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap-slider.js"></script>
 
 <!-- Plugin JavaScript -->
 <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <!-- Custom JavaScript for this theme -->
 <script src="js/scrolling-nav.js"></script>
