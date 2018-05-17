@@ -59,8 +59,8 @@
                     <input type="button" class="btn" onclick="showDiv('jahr')" value="Jahr">
                     <button type="button" class="btn" onclick="showDiv('stimmbeteiligung')">Stimmbeteiligung</button>
                     <button type="button" class="btn" onclick="showDiv('anteil')">Ja-Anteil</button>
-                    <button type="button" class="btn" onclick="showDiv('suchbegriffe')">Suchbegriffe</button>
                     <button type="button" class="btn" onclick="showDiv('abstimmungsart')">Abstimmungsart</button>
+                    <button type="button" class="btn" onclick="showDiv('suchbegriffe')">Suchbegriffe</button>
 
                     <script src="jsr/main.js"></script>
                     <script src="jsr/index.js"></script>
@@ -146,14 +146,6 @@
                         </script>
                     </div>
 
-                    <div id="suchbegriffe" style="display:none;">
-                        <br>
-                        <h4>Suchbegriffe</h4>
-                        <p class="lead">Hier können Sie nach einem Stichwort suchen.</p>
-                        <input name="suche" type="text" class="form-control" id="suchbegriff" placeholder="Suche...">
-                        <br>
-                    </div>
-
                     <div id="abstimmungsart" style="display:none;">
                         <br>
                         <h4>Abstimmungsart</h4>
@@ -168,6 +160,14 @@
                             <option value="Plebiszit">Plebiszit</option>
                         </select>
                     </div>
+
+                    <div id="suchbegriffe" style="display:none;">
+                        <br>
+                        <h4>Suchbegriffe</h4>
+                        <p class="lead">Hier können Sie nach einem Stichwort suchen.</p>
+                        <input name="suche" type="text" class="form-control" id="suchbegriff" placeholder="Suche...">
+                        <br>
+                    </div>
                     <input class="btn btn-primary" type="submit" name="submit" value="Submit" style="margin-top: 5%; margin-left: 80%;">
                 </form>
             </div>
@@ -176,7 +176,7 @@
 </section>
 
 <?php
-// variable for auswertung display
+// boolean zum überprüfen ob die Kriterien schon gesetzt wurden
 $notSet = false;
 ?>
 
@@ -186,10 +186,10 @@ $notSet = false;
             <div class="col-lg-8 mx-auto">
                 <h1>Auswertung</h1>
                     <?php
-                    // hide errors
+                    // Fehler ausblenden
                     error_reporting(0);
 
-                    // read CSV file
+                    // CSV datei lesen
                     function readCSV($csvFile)
                     {
                         $file_handle = fopen($csvFile, 'r');
@@ -200,49 +200,60 @@ $notSet = false;
                         return $line_of_text;
                     }
 
-
-                    // execute function
-                    $abstimmungen = 'data/abstimmungen.csv'; // file name
+                    // Funktion ausführen
+                    $abstimmungen = 'data/abstimmungen.csv'; // Dateiname
                     $array_abstg = readCSV($abstimmungen);
-                    $array_length = count($array_abstg); // array length
+                    $array_length = count($array_abstg); // array länge
 
-                    // save values from criterias upon submit
+                    // Speichert die Daten der Kriterien
                     if (isset($_POST['submit'])) {
                         // Jahr
-                        $gesJahr_1 = $_POST['jahrSlider_1']; // anfang
-                        $gesJahr_2 = $_POST['jahrSlider_2']; // ende
+                        $gesJahr_1 = $_POST['jahrSlider_1']; // von
+                        $gesJahr_2 = $_POST['jahrSlider_2']; // bis
 
                         // Stimmbeteiligung
-                        $stimmbeteiligung_1 = $_POST['stimmbeteiligung_1'];
-                        $stimmbeteiligung_2 = $_POST['stimmbeteiligung_2'];
+                        $stimmbeteiligung_1 = $_POST['stimmbeteiligung_1']; // von
+                        $stimmbeteiligung_2 = $_POST['stimmbeteiligung_2']; // bis
 
                         // Ja-Anteil
-                        $jaAnteil_1 = $_POST['jaAnteil_1'];
-                        $jaAnteil_2 = $_POST['jaAnteil_2'];
+                        $jaAnteil_1 = $_POST['jaAnteil_1']; // von
+                        $jaAnteil_2 = $_POST['jaAnteil_2']; // bis
 
                         // Suchbegriff
                         if (isset($_POST['suche'])) {
+                            // Suchbegriff ist gesetzt
                             $suchbegriff_1 = $_POST['suche'];
                             $GLOBALS['notSet'] = false;
                         } else {
+                            // falls Suchbegriff leer ist
                             $suchbegriff_1 = "";
                         }
 
                         // Abstimmungsart
                         $abstimmungsart_1 = $_POST['abstimmungArt'];
                     } else {
+                        // Kriterien wurden noch nicht gesetzt
                          $GLOBALS['notSet'] = true;
                     }
 
+                    // Kriterien sind gesetzt
                     if (($GLOBALS['notSet']) == false) {
                         echo "<p class='lead'>Folgende Auswahl trifft auf Ihre Kriterien zu.</p>";
                     }
 
-                    // amount of matching datasets
+                    // Anzahl passender Abstimmungen
                     $anzahl = 0;
 
+                    // Summen für den Gesamtdurchschnitt
+                    $sumJa = 0;
+                    $sumProzentJa = 0;
+                    $sumNein = 0;
+                    $sumProzentNein = 0;
+                    $sumGueltigeStimmen = 0;
+
+                    // Array geht durch CSV datei
                     for ($i = 1; $i < $array_length -1; $i++) {
-                        // save array elements
+                        // speichert Array Elemente
                         $datum = $array_abstg[$i][0];
                         $jahr = substr($datum, -4);
                         $name = utf8_encode($array_abstg[$i][1]); // umlaute
@@ -266,10 +277,18 @@ $notSet = false;
                             $stimm = $stimmbeteiligung;
                         }
 
-                        // display
+                        // gefilterte Daten anzeigen
                         if (($jahr >= $gesJahr_1 && $jahr <= $gesJahr_2) && ($stimmbeteiligung >= $stimmbeteiligung_1 && $stimmbeteiligung <= $stimmbeteiligung_2) && ($prozentJa >= $jaAnteil_1 && $prozentJa <= $jaAnteil_2) && ($art == $abstimmungsart_1 || $abstimmungsart_1 == 'alle')) {
-                            if ((strpos($name, $suchbegriff_1)) || $suchbegriff_1 == "") {
-                                $anzahl++;
+                            if (((strpos($name, $suchbegriff_1)) !== false)|| $suchbegriff_1 == "") {
+                                // berechnen
+                                $anzahl++; // anzahl um 1 erhöhen
+                                $sumJa = $sumJa + $jaStimmen;   // Summe aller Ja-Stimmen
+                                $sumProzentJa = $sumProzentJa + $prozentJa; // Summe aller Ja-Stimmen in Prozent
+                                $sumNein = $sumNein + $neinStimmen; // Summe aller Nein-Stimmen
+                                $sumProzentNein =
+                                $sumGueltigeStimmen = $sumGueltigeStimmen + $gueltigeStimmen; // Summe von allen gültigen Stimmen
+
+                                // Collapse
                                 echo "
                         <div class=\"panel-group\">
                           <div class=\"panel panel-default\">
@@ -319,10 +338,12 @@ $notSet = false;
                                 }
                             }
                     }
+
                     ?>
 
                     <p class="lead">
                         <?php
+                        // falls keine Kriterien ausgewählt wurden
                         if ($GLOBALS['notSet'] == true) {
                             echo "Es wurden noch keine Kriterien ausgewählt. Bitte wählen Sie diese oben aus und drücken Sie auf 'Submit'.";
                         }
@@ -330,13 +351,57 @@ $notSet = false;
                     </p>
 
                 <?php
-                // if anzahl == 1, then singular of abstimmung
+                // gesamtdurchschnitt
+                $avgJa = round($sumJa / $anzahl, 0);
+                $avgProzentJa = round($sumProzentJa / $anzahl, 1);
+                $avgNein = round($sumNein / $anzahl, 0);
+                $avgProzentNein = round($sumProzentNein / $anzahl, 1);
+                $avgGueltig = round($sumGueltigeStimmen / $anzahl, 0);
+
+                // nur wenn Kriterien gesetzt wurden
+                if ($GLOBALS['notSet'] != true) {
+                    echo "
+                      <div class=\"panel-group\">
+                          <div class=\"panel panel-default\">
+                            <div class=\"panel-heading\">
+                              <h4 class=\"panel-title\">
+                                <a data-toggle=\"collapse\" href=\"#gesamtdurchschnitt\" style='color: green;'>Gesamtdurchschnitt</a>
+                              </h4>
+                            </div>
+                            <div id=\"gesamtdurchschnitt\" class=\"panel-collapse collapse\">
+                              <div class=\"panel-body\">
+                              <table class=\"table-borderless\">                            
+                                  <thead>
+                                    <tr>
+                                      <th scope=\"col\">Gültige Stimmen</th>
+                                      <th scope=\"col\">Ja</th>
+                                      <th scope=\"col\">Nein</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>                                  
+                                      <td>$avgGueltig</td>
+                                      <td>$avgJa ($avgProzentJa%)</td>
+                                      <td>$avgNein ($avgProzentNein%)</td>
+                                    </tr>                                
+                                  </tbody>                                                                                            
+                               </table>     
+                               </div>    
+                          </div>
+                        </div>
+                        </div>
+                        <br>
+                ";
+                }
+
+                // wenn die Anzahl Abstimmungen 1 ist, dann Singular von Abstimmung
                 $text = "";
                 if ($GLOBALS['anzahl'] == 1) {
-                $text = $text . "Abstimmung";
+                $text = $text . "Abstimmung";   // singular
                 } else {
-                $text = $text . "Abstimmungen";
+                $text = $text . "Abstimmungen"; // plural
                 }
+                // ausgabe
                 echo "<br><p class='lead'>Insgesamt hat es <strong>$anzahl</strong> zutreffende $text.</p>";
                 ?>
             </div>
