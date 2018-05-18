@@ -17,6 +17,9 @@
 
     <!-- JSR -->
     <link rel="stylesheet" href="jsr/assets/css/main.css">
+
+    <!-- charts -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 
 <body id="page-top">
@@ -83,9 +86,6 @@
                                 },
                                 limit: {
                                     show: true
-                                },
-                                grid: {
-                                    color: '#999'
                                 }
                             });
                         </script>
@@ -111,9 +111,6 @@
                                 },
                                 limit: {
                                     show: true
-                                },
-                                grid: {
-                                    color: '#999'
                                 }
                             });
                         </script>
@@ -125,6 +122,7 @@
                         <p class="lead">Hier können Sie einstellen, in welchem Bereich der Ja-Anteil war.</p>
                         <input name="jaAnteil_1" id="range-2-5" type="range" min="0" max="100" value="30">
                         <input name="jaAnteil_2" id="range-2-6" type="range" min="0" max="100" value="30">
+
                         <script>
                             new JSR(['#range-2-5', '#range-2-6'], {
                                 sliders: 2,
@@ -138,9 +136,6 @@
                                 },
                                 limit: {
                                     show: true
-                                },
-                                grid: {
-                                    color: '#999'
                                 }
                             });
                         </script>
@@ -238,21 +233,26 @@ $notSet = false;
 
                     // Kriterien sind gesetzt
                     if (($GLOBALS['notSet']) == false) {
-                        echo "<p class='lead'>Folgende Auswahl trifft auf Ihre Kriterien zu.</p>";
+                        echo "<p class='lead'>Folgende Auswahl trifft auf Ihre Kriterien zu:</p>";
                     }
 
                     // Anzahl passender Abstimmungen
                     $anzahl = 0;
 
-                    // Summen für den Gesamtdurchschnitt
+                    // globale Variablen
                     $sumJa = 0;
                     $sumProzentJa = 0;
                     $sumNein = 0;
                     $sumProzentNein = 0;
                     $sumGueltigeStimmen = 0;
 
+                    $avgProzentJa = 0;
+                    $avgProzentNein = 0;
+                    $prozentJa = 0;
+                    $prozentNein = 0;
+
                     // Array geht durch CSV datei
-                    for ($i = 1; $i < $array_length -1; $i++) {
+                    for ($i = 1; $i < $array_length; $i++) {
                         // speichert Array Elemente
                         $datum = $array_abstg[$i][0];
                         $jahr = substr($datum, -4);
@@ -265,9 +265,9 @@ $notSet = false;
                         $jaStimmen = $array_abstg[$i][9];
                         $neinStimmen = $array_abstg[$i][10];
                         $stimmbeteiligung = $array_abstg[$i][11];
-                        $prozentJa = $array_abstg[$i][12];
-                        $prozentNein = $prozentJa / $jaStimmen * $neinStimmen;
-                        $prozentNein = round($prozentNein, 1);
+                        $GLOBALS['prozentJa'] = $array_abstg[$i][12];
+                        $GLOBALS['prozentNein'] = $prozentJa / $jaStimmen * $neinStimmen;
+                        $GLOBALS['prozentNein'] = round( $GLOBALS['prozentNein'], 1);
 
                         // leere Stimmbteteiligung
                         if ($stimmbeteiligung == "") {
@@ -278,18 +278,19 @@ $notSet = false;
                         }
 
                         // gefilterte Daten anzeigen
-                        if (($jahr >= $gesJahr_1 && $jahr <= $gesJahr_2) && ($stimmbeteiligung >= $stimmbeteiligung_1 && $stimmbeteiligung <= $stimmbeteiligung_2) && ($prozentJa >= $jaAnteil_1 && $prozentJa <= $jaAnteil_2) && ($art == $abstimmungsart_1 || $abstimmungsart_1 == 'alle')) {
+                        if (($jahr >= $gesJahr_1 && $jahr <= $gesJahr_2) && ($stimmbeteiligung >= $stimmbeteiligung_1 && $stimmbeteiligung <= $stimmbeteiligung_2) && ( $GLOBALS['prozentJa'] >= $jaAnteil_1 &&  $GLOBALS['prozentJa'] <= $jaAnteil_2) && ($art == $abstimmungsart_1 || $abstimmungsart_1 == 'alle')) {
                             if (((strpos($name, $suchbegriff_1)) !== false)|| $suchbegriff_1 == "") {
                                 // berechnen
                                 $anzahl++; // anzahl um 1 erhöhen
                                 $sumJa = $sumJa + $jaStimmen;   // Summe aller Ja-Stimmen
                                 $sumProzentJa = $sumProzentJa + $prozentJa; // Summe aller Ja-Stimmen in Prozent
                                 $sumNein = $sumNein + $neinStimmen; // Summe aller Nein-Stimmen
-                                $sumProzentNein =
+                                $sumProzentNein = $sumProzentNein + $prozentNein; // Summe aller Nein-Stimmen in Prozent
                                 $sumGueltigeStimmen = $sumGueltigeStimmen + $gueltigeStimmen; // Summe von allen gültigen Stimmen
 
                                 // Collapse
-                                echo "
+                                if ($GLOBALS['notSet'] != true && $anzahl != 0) {
+                                    echo "
                         <div class=\"panel-group\">
                           <div class=\"panel panel-default\">
                             <div class=\"panel-heading\">
@@ -328,19 +329,20 @@ $notSet = false;
                                       <td>$neinStimmen ($prozentNein%)</td>
                                     </tr>                        
                                   </tbody>                                                          
-                               </table>     
-                               </div>    
-                          </div>
+                               </table>
+                               <div id='collapse'></div>                                 
+                               </div>                                      
                         </div>
                         </div>
+                        </div>                 
                         <br>
                         ";
+                                }
                                 }
                             }
                     }
 
                     ?>
-
                     <p class="lead">
                         <?php
                         // falls keine Kriterien ausgewählt wurden
@@ -352,14 +354,14 @@ $notSet = false;
 
                 <?php
                 // gesamtdurchschnitt
-                $avgJa = round($sumJa / $anzahl, 0);
-                $avgProzentJa = round($sumProzentJa / $anzahl, 1);
-                $avgNein = round($sumNein / $anzahl, 0);
-                $avgProzentNein = round($sumProzentNein / $anzahl, 1);
-                $avgGueltig = round($sumGueltigeStimmen / $anzahl, 0);
+                $avgJa = round($sumJa / $anzahl, 0); // durchschnitt aller Ja-Stimmen
+                $GLOBALS['avgProzentJa'] = round($sumProzentJa / $anzahl, 0); // durchschnitt aller Ja-Stimmen in Prozent
+                $avgNein = round($sumNein / $anzahl, 0); // // durchschnitt aller Nein-Stimmen
+                $GLOBALS['avgProzentNein'] = round($sumProzentNein / $anzahl, 0); // durchschnitt aller Nein-Stimmen in Prozent
+                $avgGueltig = round($sumGueltigeStimmen / $anzahl, 0); // durchschnitt aller gültigen Stimmen
 
                 // nur wenn Kriterien gesetzt wurden
-                if ($GLOBALS['notSet'] != true) {
+                if ($GLOBALS['notSet'] != true && $anzahl != 0) {
                     echo "
                       <div class=\"panel-group\">
                           <div class=\"panel panel-default\">
@@ -373,9 +375,9 @@ $notSet = false;
                               <table class=\"table-borderless\">                            
                                   <thead>
                                     <tr>
-                                      <th scope=\"col\">Gültige Stimmen</th>
-                                      <th scope=\"col\">Ja</th>
-                                      <th scope=\"col\">Nein</th>
+                                      <th scope=\"col\" style='width: 40%;'>Gültige Stimmen</th>
+                                      <th scope=\"col\" style='width: 30%;'>Ja</th>
+                                      <th scope=\"col\" style='width: 30%;'>Nein</th>
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -384,11 +386,12 @@ $notSet = false;
                                       <td>$avgJa ($avgProzentJa%)</td>
                                       <td>$avgNein ($avgProzentNein%)</td>
                                     </tr>                                
-                                  </tbody>                                                                                            
-                               </table>     
-                               </div>    
-                          </div>
-                        </div>
+                                  </tbody>                                          
+                                    </table>  
+                                    <div id='piechart' style='padding-right: 100%;'></div>           
+                                    </div>    
+                                </div>
+                            </div>
                         </div>
                         <br>
                 ";
@@ -401,8 +404,16 @@ $notSet = false;
                 } else {
                 $text = $text . "Abstimmungen"; // plural
                 }
-                // ausgabe
-                echo "<br><p class='lead'>Insgesamt hat es <strong>$anzahl</strong> zutreffende $text.</p>";
+
+                // ausgabe wenn es Abstimmungen gibt
+                if ($GLOBALS['notSet'] != true && $anzahl != 0) {
+                    echo "<br><p class='lead'>Insgesamt hat es <strong>$anzahl</strong> zutreffende $text.</p>";
+                }
+
+                // falls Anzahl = 0, dann gibt es keine Abstimmungen
+                if ($anzahl == 0) {
+                    echo "<p class='lead' style='color: red;'>Es gibt keine zutreffende Abstimmungen!</p>";
+                }
                 ?>
             </div>
         </div>
@@ -430,5 +441,29 @@ $notSet = false;
 
 <!-- own JavaScript -->
 <script src="js/functions.js"></script>
+<script type="text/javascript">
+    // Load google charts
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    // Draw the chart and set the chart values
+    function drawChart() {
+        var ja = <?php echo $GLOBALS['avgProzentJa'] ?>;
+        var nein = <?php echo $GLOBALS['avgProzentNein'] ?>;
+
+        var data = google.visualization.arrayToDataTable([
+            ['Abstimmung', '%'],
+            ['Ja', ja],
+            ['Nein', nein]
+        ]);
+
+        // Optional; add a title and set the width and height of the chart
+        var options = {'width':480, 'height':300, backgroundColor: 'transparent'};
+
+        // Display the chart inside the <div> element with id="piechart"
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+    }
+</script>
 </body>
 </html>
