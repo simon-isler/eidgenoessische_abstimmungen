@@ -6,6 +6,3 @@ function showDiv(id) {
     else
         e.style.display = 'block';
 }
-
-
-
